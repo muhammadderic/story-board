@@ -1,3 +1,5 @@
+import SearchForm from "./SearchForm"
+
 const Hero = () => {
   return (
     <section className="primary_container">
@@ -9,6 +11,8 @@ const Hero = () => {
       <p className="sub-heading !max-w-3xl">
         Express Your Creativity, Share Your Journey, and Inspire Others.
       </p>
+
+      <SearchForm />
     </section >
   )
 }
