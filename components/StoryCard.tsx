@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { StoryCardType } from "@/types/story-card-type"
 import { formatDate } from "@/lib/utils"
 
@@ -67,7 +68,9 @@ const StoryCard = ({ story }: { story: StoryCardType }) => {
         <p className="text-16-medium">{category}</p>
 
         <button className="story-card_btn">
-          Details
+          <Link href={`/story/${story._id}`}>
+            Details
+          </Link>
         </button>
       </div>
     </li>

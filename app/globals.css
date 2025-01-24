@@ -66,6 +66,14 @@
     @apply rounded-full bg-black-200 font-medium text-[16px] text-white px-5 py-3 !important;
   }
 
+  .tag {
+    @apply bg-secondary px-6 py-3 font-bold rounded-sm uppercase relative tag-tri;
+  }
+
+  .category-tag {
+    @apply font-medium text-[16px] bg-primary-100 px-4 py-2 rounded-full;
+  }
+
   /* PROPERTIES */
   .pattern {
     background-image: linear-gradient(
@@ -78,5 +86,9 @@
     background-size: 5% 100%;
     background-position: center;
     background-repeat: repeat-x;
+  }
+
+  .tag-tri {
+    @apply before:content-[''] before:absolute before:top-2 before:left-2 before:border-t-[10px] before:border-t-black before:border-r-[10px] before:border-r-transparent after:content-[''] after:absolute after:bottom-2 after:right-2 after:border-b-[10px] after:border-b-black after:border-l-[10px] after:border-l-transparent;
   }
 }
