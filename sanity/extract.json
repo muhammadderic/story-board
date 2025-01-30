@@ -663,7 +663,7 @@
     }
   },
   {
-    "name": "startup",
+    "name": "story",
     "type": "document",
     "attributes": {
       "_id": {
@@ -676,7 +676,7 @@
         "type": "objectAttribute",
         "value": {
           "type": "string",
-          "value": "startup"
+          "value": "story"
         }
       },
       "_createdAt": {
@@ -749,13 +749,6 @@
         },
         "optional": true
       },
-      "description": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
       "category": {
         "type": "objectAttribute",
         "value": {
@@ -763,14 +756,7 @@
         },
         "optional": true
       },
-      "image": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "pitch": {
+      "story": {
         "type": "objectAttribute",
         "value": {
           "type": "string"

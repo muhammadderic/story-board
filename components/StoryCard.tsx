@@ -6,9 +6,7 @@ import { formatDate } from "@/lib/utils"
 const StoryCard = ({ story }: { story: StoryCardType }) => {
   const {
     title,
-    description,
     author,
-    image,
     views,
     category,
     _createdAt,
@@ -47,20 +45,6 @@ const StoryCard = ({ story }: { story: StoryCardType }) => {
           width={48}
           height={48}
           className="rounded-full"
-        />
-      </div>
-
-      {/* Story Description and Image */}
-      <div>
-        <p className="story-card_desc">
-          {description}
-        </p>
-
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={image}
-          alt="placeholder"
-          className="story-card_img"
         />
       </div>
 
