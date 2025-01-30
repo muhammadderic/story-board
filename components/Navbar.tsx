@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { auth, signOut, signIn } from "@/auth"
+import { BadgePlus } from "lucide-react";
 
 const Navbar = async () => {
   const session = await auth();
@@ -20,6 +21,11 @@ const Navbar = async () => {
           {
             session && session.user ? (
               <>
+                <Link href="/story/create">
+                  <span className="max-sm:hidden">Create</span>
+                  <BadgePlus className="size-6 sm:hidden" />
+                </Link>
+
                 <form action={async () => {
                   "use server";
 
