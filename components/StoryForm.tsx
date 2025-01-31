@@ -2,10 +2,11 @@
 
 import { useActionState, useState } from "react";
 import { Input } from "./ui/input"
-import { Textarea } from "./ui/textarea";
 import { Send } from "lucide-react";
 import { Button } from "./ui/button";
 import MDEditor from "@uiw/react-md-editor";
+import { formSchema } from "@/lib/validation";
+import { createStory } from "@/lib/actions";
 
 const StoryForm = () => {
   const [errors, setErrors] = useState("");
@@ -14,7 +15,16 @@ const StoryForm = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmitStory = async (prevState: any, formData: FormData) => {
     try {
-      console.log(formData);
+      const formValues = {
+        title: formData.get('title') as string,
+        category: formData.get('category') as string,
+        story,
+      }
+
+      await formSchema.parseAsync(formValues);
+
+      await createStory(formData, story);
+      // console.log(formData);
     } catch (error) {
       console.log(error);
       setErrors('An unexpected error has occurred');
@@ -51,19 +61,6 @@ const StoryForm = () => {
       </div>
 
       <div>
-        <label htmlFor="description" className="story-form_label">
-          Description
-        </label>
-        <Textarea
-          id="description"
-          name="description"
-          className="story-form_textarea"
-          required
-          placeholder="Story Description"
-        />
-      </div>
-
-      <div>
         <label htmlFor="category" className="story-form_label">
           Category
         </label>
@@ -73,19 +70,6 @@ const StoryForm = () => {
           className="story-form_input"
           required
           placeholder="Story Category (Fiction, Sci-Fi, Reality...)"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="link" className="story-form_label">
-          Image URL
-        </label>
-        <Input
-          id="link"
-          name="link"
-          className="story-form_input"
-          required
-          placeholder="Story Image URL"
         />
       </div>
 
