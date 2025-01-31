@@ -87,7 +87,7 @@ const StoryForm = () => {
           style={{ borderRadius: 20, overflow: "hidden" }}
           textareaProps={{
             placeholder:
-              "Briefly describe your idea and what problem it solves",
+              "Share your story with the world, start writing your journey here!",
           }}
           previewOptions={{
             disallowedElements: ["style"],

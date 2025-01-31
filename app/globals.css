@@ -100,7 +100,7 @@
   }
 
   .story-form_btn {
-    @apply bg-primary border-[4px] border-black rounded-full p-5 min-h-[70px] w-full font-bold text-[18px] !important;
+    @apply bg-primary hover:bg-primary-500 border-[3px] border-black rounded-full p-5 min-h-[70px] w-full font-bold text-[18px]  !important;
   }
 
   /* PROPERTIES */

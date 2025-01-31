@@ -15,6 +15,7 @@ const Navbar = async () => {
             alt="logo"
             width={50}
             height={50}
+            className="border hover:border-2 border-black-800"
           />
         </Link>
 
@@ -22,8 +23,8 @@ const Navbar = async () => {
           {
             session && session.user ? (
               <>
-                <Link href="/story/create">
-                  <span className="max-sm:hidden">Create</span>
+                <Link href="/story/create" className="max-sm:hidden py-2 px-4 border hover:border-2 border-black-800 rounded-md">
+                  <span>Create</span>
                   <BadgePlus className="size-6 sm:hidden" />
                 </Link>
 
@@ -31,8 +32,8 @@ const Navbar = async () => {
                   "use server";
 
                   await signOut({ redirectTo: "/" });
-                }}>
-                  <button type="submit" className="max-sm:hidden">
+                }} className="max-sm:hidden py-2 px-4 border hover:border-2 border-black-800 rounded-md">
+                  <button type="submit">
                     Logout
                   </button>
                 </form>
@@ -42,8 +43,8 @@ const Navbar = async () => {
                 "use server";
 
                 await signIn("github");
-              }}>
-                <button type="submit" className="max-sm:hidden">
+              }} className="max-sm:hidden py-2 px-4 border hover:border-2 border-black-800 rounded-md">
+                <button type="submit">
                   Login
                 </button>
               </form>
