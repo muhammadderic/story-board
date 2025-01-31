@@ -2,9 +2,9 @@
 
 import Link from "next/link"
 
-const SearchFormReset = () => {
+const SearchFormReset = ({ onReset }: { onReset: () => void }) => {
   return (
-    <button type="reset">
+    <button type="reset" onClick={onReset}>
       <Link
         href="/"
         className="search-btn text-white"
