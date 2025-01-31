@@ -30,7 +30,7 @@
   }
 
   .search-input {
-    @apply flex-1 font-bold placeholder:font-semibold placeholder:text-black-100 w-full h-auto outline-none;
+    @apply flex-1 font-bold placeholder:font-semibold placeholder:text-black w-full h-auto outline-none;
   }
 
   .search-btn {
@@ -43,7 +43,7 @@
   }
 
   .no-result {
-    @apply text-black-100 text-sm font-normal;
+    @apply text-black text-sm font-normal;
   }
 
   .story-card {
@@ -55,7 +55,7 @@
   }
 
   .story-card_desc {
-    @apply font-normal text-[16px] line-clamp-2 my-3 text-black-100 break-all;
+    @apply font-normal text-[16px] line-clamp-2 my-3 text-black break-all;
   }
 
   .story-card_img {
@@ -63,7 +63,7 @@
   }
 
   .story-card_btn {
-    @apply rounded-full bg-black-200 font-medium text-[16px] text-white px-5 py-3 !important;
+    @apply rounded-full bg-black font-medium text-[16px] text-white px-5 py-3 !important;
   }
 
   .tag {
@@ -84,11 +84,11 @@
   }
 
   .story-form_input {
-    @apply border-[3px] border-black px-5 py-7 text-[18px] text-black font-semibold rounded-full mt-3 placeholder:text-black-300 !important;
+    @apply border-[3px] border-black px-5 py-7 text-[18px] text-black font-semibold rounded-full mt-3 placeholder:text-black !important;
   }
 
   .story-form_textarea {
-    @apply border-[3px] border-black p-5 text-[18px] text-black font-semibold rounded-[20px] mt-3 placeholder:text-black-300 !important;
+    @apply border-[3px] border-black p-5 text-[18px] text-black font-semibold rounded-[20px] mt-3 placeholder:text-black !important;
   }
 
   .story-form_error {
@@ -96,7 +96,7 @@
   }
 
   .story-form_editor {
-    @apply mt-3 border-[3px] border-black text-[18px] text-black font-semibold placeholder:text-black-300 !important;
+    @apply mt-3 border-[3px] border-black text-[18px] text-black font-semibold placeholder:text-black !important;
   }
 
   .story-form_btn {

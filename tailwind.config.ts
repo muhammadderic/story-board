@@ -15,12 +15,6 @@ export default {
           DEFAULT: '#3B6790'
         },
         secondary: '#EFB036',
-        black: {
-          '100': '#333333',
-          '200': '#141413',
-          '300': '#7D8087',
-          DEFAULT: '#000000'
-        }
       },
       boxShadow: {
         '100': '2px 2px 0px 0px rgb(0, 0, 0)',
