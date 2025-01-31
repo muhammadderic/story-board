@@ -3,11 +3,10 @@
 import { auth } from "@/auth"
 import { parseServerActionResponse } from "./utils";
 import slugify from "slugify";
+import { writeClient } from "@/sanity/lib/write-client";
 
 export const createStory = async (form: FormData, story: string) => {
   const session = await auth();
-
-  console.log(session)
 
   if (!session) {
     return parseServerActionResponse({
@@ -30,14 +29,20 @@ export const createStory = async (form: FormData, story: string) => {
         _type: slug,
         current: slug,
       },
-      // author: {
-      //   _type: "reference",
-      //   _ref: session?.id,
-      // },
+      author: {
+        _type: "reference",
+        _ref: session?.id,
+      },
       story: story,
     };
 
-    console.log(newStory);
+    const result = await writeClient.create({ _type: "story", ...newStory });
+
+    return parseServerActionResponse({
+      ...result,
+      error: "",
+      status: "SUCCESS",
+    });
   } catch (error) {
     console.log(error);
 

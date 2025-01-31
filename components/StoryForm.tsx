@@ -7,10 +7,13 @@ import { Button } from "./ui/button";
 import MDEditor from "@uiw/react-md-editor";
 import { formSchema } from "@/lib/validation";
 import { createStory } from "@/lib/actions";
+import { useRouter } from "next/navigation";
 
 const StoryForm = () => {
   const [errors, setErrors] = useState("");
   const [story, setStory] = useState("");
+
+  const router = useRouter();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmitStory = async (prevState: any, formData: FormData) => {
@@ -23,8 +26,15 @@ const StoryForm = () => {
 
       await formSchema.parseAsync(formValues);
 
-      await createStory(formData, story);
-      // console.log(formData);
+      const result = await createStory(formData, story);
+      console.log(result)
+
+      if (result.status == "SUCCESS") {
+        // router.push(`/story/${result._id}`);
+        router.push(`/`);
+      }
+
+      return result;
     } catch (error) {
       console.log(error);
       setErrors('An unexpected error has occurred');
