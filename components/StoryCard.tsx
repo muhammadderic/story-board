@@ -9,7 +9,7 @@ const StoryCard = ({ story }: { story: StoryCardType }) => {
   return (
     <li className="cursor-pointer story-card group bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
       {/* Story Date and Views */}
-      <div className="flex-between p-4 border-b border-gray-100">
+      <div className="flex-between px-4 border-b border-gray-100">
         <p className="text-sm text-gray-500">
           {formatDate(_createdAt)}
         </p>
@@ -42,7 +42,7 @@ const StoryCard = ({ story }: { story: StoryCardType }) => {
       </div>
 
       {/* Category and Details Button */}
-      <div className="flex-between p-4 border-t border-gray-100">
+      <div className="flex-between px-4 border-t border-gray-100">
         <p className="text-sm text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
           {category}
         </p>

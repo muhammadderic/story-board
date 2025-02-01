@@ -11,3 +11,16 @@ export const AUTHOR_BY_GITHUB_ID_QUERY = defineQuery(`
     bio
   }
 `);
+
+export const STORIES_BY_AUTHOR_QUERY =
+  defineQuery(`*[_type == "story" && author._ref == $id] | order(_createdAt desc) {
+  _id, 
+  title, 
+  slug,
+  _createdAt,
+  author -> {
+    _id, name, image, bio
+  }, 
+  views,
+  category,
+}`);

@@ -3,6 +3,9 @@ import { client } from "@/sanity/lib/client";
 import { AUTHOR_BY_GITHUB_ID_QUERY } from "@/sanity/lib/queries";
 import Image from "next/image";
 import { auth } from "@/auth";
+import { Suspense } from "react";
+import StorySkeleton from "@/components/StorySkeleton";
+import UserStories from "@/components/UserStories";
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
@@ -37,10 +40,16 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
           </p>
         </div>
 
-        <div className="flex-1 flex flex-col gap-5 lg:-mt-5">
+        <div className="w-full flex-1 flex flex-col gap-5 lg:-mt-5">
           <p className="text-30-bold">
             {session?.id === id ? "Your" : "All"} Startups
           </p>
+
+          <ul className="card_grid-sm gap-4">
+            <Suspense fallback={<StorySkeleton />}>
+              <UserStories id={id} />
+            </Suspense>
+          </ul>
         </div>
       </section>
     </>
