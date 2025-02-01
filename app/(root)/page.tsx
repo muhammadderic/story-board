@@ -2,13 +2,21 @@ import { StoryCardType } from "@/types/story-card-type";
 import Hero from "@/components/Hero";
 import StoryCard from "@/components/StoryCard";
 import SearchForm from "@/components/SearchForm";
+import { STORIES_BY_SEARCH_QUERY, STORIES_QUERY } from "@/sanity/lib/queries";
 import { client } from "@/sanity/lib/client";
-import { STORIES_QUERY } from "@/sanity/lib/queries";
+// import { sanityFetch } from "@/sanity/lib/live";
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ query?: string }> }) {
   const query = (await searchParams).query || "";
+  const params = { search: query || null };
+  console.log(params);
+  let stories = [];
 
-  const stories = await client.fetch(STORIES_QUERY);
+  if (params.search) {
+    stories = await client.fetch(STORIES_BY_SEARCH_QUERY, { search: params.search });
+  } else {
+    stories = await client.fetch(STORIES_QUERY);
+  }
 
   return (
     <div>

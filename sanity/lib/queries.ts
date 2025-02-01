@@ -1,8 +1,23 @@
 import { defineQuery } from "next-sanity";
 
-export const STORIES_QUERY =
+export const STORIES_BY_SEARCH_QUERY =
   // Fetching all stories
   // defineQuery(`*[_type == "startup" && defined(slug.current)] | order(_createdAt desc) {
+  // Fetching stories by search
+  defineQuery(`*[_type == "story" && defined(slug.current) && !defined($search) || title match $search || category match $search || author->name match $search] | order(_createdAt desc) {
+  _id, 
+  title, 
+  slug,
+  _createdAt,
+  author -> {
+    _id, name, image, bio
+  }, 
+  views,
+  category,
+}`);
+
+export const STORIES_QUERY =
+  // Fetching all stories
   defineQuery(`*[_type == "story" && defined(slug.current)] | order(_createdAt desc) {
   _id, 
   title, 
