@@ -1,11 +1,14 @@
-import { stories } from "@/data/stories";
 import { StoryCardType } from "@/types/story-card-type";
 import Hero from "@/components/Hero";
 import StoryCard from "@/components/StoryCard";
 import SearchForm from "@/components/SearchForm";
+import { client } from "@/sanity/lib/client";
+import { STORIES_QUERY } from "@/sanity/lib/queries";
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ query?: string }> }) {
   const query = (await searchParams).query || "";
+
+  const stories = await client.fetch(STORIES_QUERY);
 
   return (
     <div>

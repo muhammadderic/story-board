@@ -1,5 +1,20 @@
 import { defineQuery } from "next-sanity";
 
+export const STORIES_QUERY =
+  // Fetching all stories
+  // defineQuery(`*[_type == "startup" && defined(slug.current)] | order(_createdAt desc) {
+  defineQuery(`*[_type == "story" && defined(slug.current)] | order(_createdAt desc) {
+  _id, 
+  title, 
+  slug,
+  _createdAt,
+  author -> {
+    _id, name, image, bio
+  }, 
+  views,
+  category,
+}`);
+
 export const AUTHOR_BY_GITHUB_ID_QUERY = defineQuery(`
   *[_type == "author" && _id match $id][0]{
     _id,
