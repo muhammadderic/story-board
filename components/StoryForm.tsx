@@ -8,9 +8,10 @@ import MDEditor from "@uiw/react-md-editor";
 import { formSchema } from "@/lib/validation";
 import { createStory } from "@/lib/actions";
 import { useRouter } from "next/navigation";
+import { ZodError } from "zod";
 
 const StoryForm = () => {
-  const [errors, setErrors] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [story, setStory] = useState("");
 
   const router = useRouter();
@@ -27,17 +28,26 @@ const StoryForm = () => {
       await formSchema.parseAsync(formValues);
 
       const result = await createStory(formData, story);
-      console.log(result)
 
       if (result.status == "SUCCESS") {
-        // router.push(`/story/${result._id}`);
-        router.push(`/`);
+        router.push(`/story/${result._id}`);
       }
 
       return result;
     } catch (error) {
-      console.log(error);
-      setErrors('An unexpected error has occurred');
+      if (error instanceof ZodError) {
+        // Convert Zod errors to a key-value pair object
+        const newErrors: Record<string, string> = {};
+
+        error.errors.forEach((err) => {
+          const field = err.path[0];
+          newErrors[field] = err.message;
+        });
+
+        setErrors(newErrors);
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
     }
 
     return {
@@ -67,9 +77,10 @@ const StoryForm = () => {
           placeholder="Story Title"
         />
 
-        {errors && <p className="story-form_error">Title error</p>}
+        {errors.title && <p className="story-form_error">{errors.title}</p>}
       </div>
 
+      {/* Input Story Category */}
       <div>
         <label htmlFor="category" className="story-form_label">
           Category
@@ -81,8 +92,11 @@ const StoryForm = () => {
           required
           placeholder="Story Category (Fiction, Sci-Fi, Reality...)"
         />
+
+        {errors.category && <p className="story-form_error">{errors.category}</p>}
       </div>
 
+      {/* Input Story Content */}
       <div>
         <label htmlFor="story" className="story-form_label">
           Your Story
@@ -104,7 +118,7 @@ const StoryForm = () => {
           }}
         />
 
-        {errors && <p className="story-form_error">Error story</p>}
+        {errors.story && <p className="story-form_error">{errors.story}</p>}
       </div>
 
       <Button
