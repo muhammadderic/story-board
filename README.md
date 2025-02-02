@@ -50,6 +50,9 @@ To get started with the **Story Board App**, follow these steps:
 - 🎨 **Tailwind CSS** – Utility-first CSS framework for styling.
 - 🔑 **Auth.js** – Authentication library for handling user login.
 - 📦 **Sanity** – Headless CMS for managing content.
+- 📝 **@uiw/react-md-editor** – A Markdown editor for React with live preview.
+- 📜 **markdown-it** – A fast and flexible Markdown parser.
+- 📜 **@types/markdown-it** – TypeScript definitions for markdown-it.
 
 ## Contact
 
