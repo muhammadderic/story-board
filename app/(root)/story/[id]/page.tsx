@@ -1,82 +1,98 @@
+"use client"
+
 import Image from "next/image";
 import { formatDate } from "@/lib/utils"
 import { client } from "@/sanity/lib/client";
 import { STORY_BY_ID_QUERY } from "@/sanity/lib/queries";
 import markdownit from "markdown-it";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { Story } from "@/sanity/types";
+import { Textarea } from "@/components/ui/textarea";
+import { updateStory } from "@/lib/actions";
+import { useRouter } from "next/navigation";
 
 const md = markdownit();
 
-const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const id = (await params).id
-  const story = await client.fetch(STORY_BY_ID_QUERY, { id });
+const Page = ({ params }: { params: { id: string } }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [storyData, setStoryData] = useState<Story | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const parsedStory = md.render(story.story || "");
+  // Form fields state
+  const [updatedTitle, setUpdatedTitle] = useState("");
+  const [updatedCategory, setUpdatedCategory] = useState("");
+  const [updatedStory, setUpdatedStory] = useState("");
 
-  // return (
-  //   <>
-  //     <section className="w-full bg-primary flex justify-center items-center flex-col py-10 px-6 !min-h-[150px]">
-  //       <p className="bg-secondary px-6 py-3 font-bold rounded-sm uppercase relative tag-tri">
-  //         {formatDate(story?._createdAt)}
-  //       </p>
+  const router = useRouter();
 
-  //       <h1 className="uppercase bg-black px-6 py-3 mx-auto text-white sm:text-[54px] sm:leading-[64px] text-[36px] leading-[46px] max-w-5xl text-center my-5">
-  //         {story.title}
-  //       </h1>
-  //     </section>
+  // Open modal and fetch story data
+  const handleEditClick = async () => {
+    setIsModalOpen(true);
+  };
 
-  //     <section className="px-6 py-10 max-w-7xl mx-auto">
-  //       <div className="space-y-5 mt-10 max-w-4xl mx-auto">
-  //         <div className="flex-between gap-5">
-  //           <div className="flex gap-2 items-center mb-3">
-  //             <Image
-  //               src={story.author.image}
-  //               alt="avatar"
-  //               width={64}
-  //               height={64}
-  //               className="rounded-full drop-shadow-lg"
-  //             />
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { id } = (await params);
 
-  //             <div>
-  //               <p className="text-20-medium">{story.author.name}</p>
-  //               <p className="text-16-medium !text-black-300">
-  //                 @{story.author.name}
-  //               </p>
-  //             </div>
-  //           </div>
+    try {
+      const result = await updateStory(id, updatedTitle, updatedCategory, updatedStory);
 
-  //           <p className="font-medium text-[16px] bg-primary-100 px-4 py-2 rounded-full">{story.category}</p>
-  //         </div>
-  //       </div>
-  //     </section>
+      alert("Story updated successfully!");
+      alert("I am sorry, the data will change in 60 seconds :)!");
+      setIsModalOpen(false);
 
-  //     <section className="px-6 py-10 max-w-7xl mx-auto mb-10">
-  //       <div className="space-y-5 mt-10 max-w-4xl mx-auto">
-  //         <div className="flex flex-col gap-5">
-  //           <h3 className="text-30-bold">Story</h3>
+      if (result.status == "SUCCESS") {
+        router.push(`/story/${result._id}`);
+      }
+    } catch (error) {
+      console.error("Error updating story:", error);
+      alert("Failed to update story.");
+    }
+  };
 
-  //           {parsedStory ? (
-  //             <article
-  //               className="prose max-w-4xl font-work-sans break-all"
-  //               dangerouslySetInnerHTML={{ __html: parsedStory }}
-  //             />
-  //           ) : (
-  //             <p className="no-result">No story provided</p>
-  //           )}
-  //         </div>
-  //       </div>
-  //     </section>
-  //   </>
-  // )
+  // Fetch story data and pre-fill the form
+  useEffect(() => {
+    const fetchStoryData = async () => {
+      const { id } = (await params);
+      try {
+        const data: Story | null = await client.fetch(STORY_BY_ID_QUERY, { id });
+
+        if (data) {
+          setStoryData(data);
+          setUpdatedTitle(data.title as string);
+          setUpdatedCategory(data.category as string);
+          setUpdatedStory(data.story as string);
+        }
+      } catch (error) {
+        console.error("Error fetching story:", error);
+      } finally {
+        setLoading(false);
+        console.log(storyData);
+      }
+    };
+
+    fetchStoryData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
+
+  const parsedStory = md.render(storyData?.story || "");
+
+  if (loading) return <p>Loading story...</p>;
+
   return (
     <>
       {/* Hero Section */}
       <section className="w-full bg-black flex justify-center items-center flex-col py-20 px-6">
         <p className="bg-gradient-to-r from-blue-600 to-purple-500 px-6 py-2 font-bold rounded-full uppercase text-white text-sm tracking-wide shadow-lg">
-          {formatDate(story?._createdAt)}
+          {storyData && formatDate(storyData._createdAt)}
         </p>
 
         <h1 className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-500 sm:text-5xl text-3xl font-bold text-center max-w-4xl mx-auto mt-6 leading-tight">
-          {story.title}
+          {storyData && storyData.title}
         </h1>
       </section>
 
@@ -84,23 +100,27 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
       <section className="px-6 py-12 max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-6 max-w-4xl mx-auto">
           {/* Author Info */}
-          <div className="flex items-center gap-4">
-            <Image
-              src={story.author.image}
-              alt="avatar"
-              width={80}
-              height={80}
-              className="rounded-full border-4 border-white shadow-lg"
-            />
-            <div>
-              <p className="text-xl font-semibold">{story.author.name}</p>
-              <p className="text-gray-600">@{story.author.username}</p>
-            </div>
-          </div>
+          {
+            storyData && (
+              <div className="flex items-center gap-4">
+                <Image
+                  src={storyData.author?.image}
+                  alt="avatar"
+                  width={80}
+                  height={80}
+                  className="rounded-full border-4 border-white shadow-lg"
+                />
+                <div>
+                  <p className="text-xl font-semibold">{storyData.author?.name}</p>
+                  <p className="text-gray-600">@{storyData.author?.username}</p>
+                </div>
+              </div>
+            )
+          }
 
           {/* Category */}
           <p className="bg-primary-100 text-primary-dark font-medium text-sm px-6 py-2 rounded-full shadow-sm">
-            {story.category}
+            {storyData && storyData.category}
           </p>
         </div>
       </section>
@@ -120,6 +140,79 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
           )}
         </div>
       </section>
+
+      <section className="px-6 py-12 max-w-7xl mx-auto">
+        <div className="max-w-4xl mx-auto flex justify-end gap-4">
+          <button
+            onClick={handleEditClick}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+            Edit
+          </button>
+
+          <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
+            Delete
+          </button>
+        </div>
+      </section>
+
+      {/* Edit Modal */}
+      <Dialog
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Edit Story
+            </DialogTitle>
+            <DialogDescription>
+              Update your story details below and save the changes.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Title</label>
+              <Input
+                type="text"
+                value={updatedTitle}
+                onChange={(e) => setUpdatedTitle(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Category</label>
+              <Input
+                type="text"
+                value={updatedCategory}
+                onChange={(e) => setUpdatedCategory(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Story</label>
+              <Textarea
+                value={updatedStory}
+                onChange={(e) => setUpdatedStory(e.target.value)}
+                rows={5}
+                required
+              />
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
+                Cancel
+              </Button>
+
+              <Button type="submit">
+                Save Changes
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

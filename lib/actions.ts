@@ -52,3 +52,53 @@ export const createStory = async (form: FormData, story: string) => {
     });
   }
 }
+
+export const updateStory = async (
+  id: string,
+  updatedTitle: string,
+  updatedCategory: string,
+  updatedStory: string
+) => {
+  const session = await auth();
+
+  if (!session) {
+    return parseServerActionResponse({
+      error: "Not signed in",
+      status: "ERROR",
+    });
+  }
+
+  const slug = slugify(updatedTitle as string, { lower: true, strict: true });
+
+  try {
+    const updatedStoryObject = {
+      _type: "story",
+      title: updatedTitle,
+      category: updatedCategory,
+      slug: {
+        _type: "slug",
+        current: slug,
+      },
+      story: updatedStory,
+    };
+
+    const result = await writeClient
+      .withConfig({ useCdn: false })
+      .patch(id) // Target the document by its ID
+      .set(updatedStoryObject) // Update with new data
+      .commit(); // Apply changes
+
+    return parseServerActionResponse({
+      ...result,
+      error: "",
+      status: "SUCCESS",
+    });
+  } catch (error) {
+    console.error(error);
+
+    return parseServerActionResponse({
+      error: JSON.stringify(error),
+      status: "ERROR",
+    });
+  }
+};
