@@ -1,18 +1,22 @@
 "use client"
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import markdownit from "markdown-it";
+
+import { updateStory } from "@/lib/actions";
 import { formatDate } from "@/lib/utils"
+
 import { client } from "@/sanity/lib/client";
 import { STORY_BY_ID_QUERY } from "@/sanity/lib/queries";
-import markdownit from "markdown-it";
+import { Story } from "@/sanity/types";
+
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { Story } from "@/sanity/types";
 import { Textarea } from "@/components/ui/textarea";
-import { updateStory } from "@/lib/actions";
-import { useRouter } from "next/navigation";
+import Spinner from "@/components/Spinner";
 
 const md = markdownit();
 
@@ -20,6 +24,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [storyData, setStoryData] = useState<Story | null>(null);
   const [loading, setLoading] = useState(true);
+  const [updateLoading, setUpdateLoading] = useState(false);
 
   // Form fields state
   const [updatedTitle, setUpdatedTitle] = useState("");
@@ -39,10 +44,15 @@ const Page = ({ params }: { params: { id: string } }) => {
     const { id } = (await params);
 
     try {
+      setUpdateLoading(true);
+
       const result = await updateStory(id, updatedTitle, updatedCategory, updatedStory);
 
+      // Simulate a 3-second delay
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       alert("Story updated successfully!");
-      alert("I am sorry, the data will change in 60 seconds :)!");
+      alert("[NEED YOU] I am sorry, the data will change in 60 seconds :)!");
       setIsModalOpen(false);
 
       if (result.status == "SUCCESS") {
@@ -51,6 +61,8 @@ const Page = ({ params }: { params: { id: string } }) => {
     } catch (error) {
       console.error("Error updating story:", error);
       alert("Failed to update story.");
+    } finally {
+      setUpdateLoading(false);
     }
   };
 
@@ -153,10 +165,21 @@ const Page = ({ params }: { params: { id: string } }) => {
 
       <section className="px-6 py-12 max-w-7xl mx-auto">
         <div className="max-w-4xl mx-auto flex justify-end gap-4">
-          <button
+          {/* <button
             onClick={handleEditClick}
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
             Edit
+          </button> */}
+          <button
+            onClick={handleEditClick}
+            disabled={loading} // Disable the button while loading
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
+          >
+            {updateLoading ? (
+              <Spinner text="Loading..." />
+            ) : (
+              "Edit" // Default text
+            )}
           </button>
 
           <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
