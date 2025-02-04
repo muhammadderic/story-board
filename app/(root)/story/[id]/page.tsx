@@ -85,6 +85,16 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   return (
     <>
+      <section className="w-full bg-black py-2 px-6">
+        <div className="max-w-4xl flex justify-start gap-4">
+          <button
+            onClick={() => router.back()}
+            className="text-white px-4 py-2 rounded border border-white hover:border-blue-600 transition-colors">
+            Back
+          </button>
+        </div>
+      </section>
+
       {/* Hero Section */}
       <section className="w-full bg-black flex justify-center items-center flex-col py-20 px-6">
         <p className="bg-gradient-to-r from-blue-600 to-purple-500 px-6 py-2 font-bold rounded-full uppercase text-white text-sm tracking-wide shadow-lg">
