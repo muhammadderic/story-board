@@ -7,7 +7,7 @@ The **Story Board** is a web application designed to allow users to share and ex
 ## Screenshots
 
 <div style="display: flex; justify-content: space-between;">
-    <img src="./public/story-board.jpeg" alt="Story Board" width="70%" />
+    <img src="./public/story-board-rm.jpeg" alt="Story Board" width="70%" />
 </div>
 
 ## Features
