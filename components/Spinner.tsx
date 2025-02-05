@@ -2,7 +2,7 @@ import React from 'react'
 
 const Spinner = ({ text }: { text: string }) => {
   return (
-    <>
+    <div className='flex gap-2'>
       {/* Loading spinner (you can use any spinner library or SVG) */}
       <svg
         className="animate-spin h-5 w-5 text-white"
@@ -25,7 +25,7 @@ const Spinner = ({ text }: { text: string }) => {
         ></path>
       </svg>
       <span>{text}</span>
-    </>
+    </div>
   )
 }
 

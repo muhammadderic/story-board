@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import markdownit from "markdown-it";
 
-import { updateStory } from "@/lib/actions";
+import { deleteStory, updateStory } from "@/lib/actions";
 import { formatDate } from "@/lib/utils"
 
 import { client } from "@/sanity/lib/client";
@@ -17,14 +17,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Spinner from "@/components/Spinner";
+import { ConfirmationModal } from "@/components/ConfirmationModal";
 
 const md = markdownit();
 
 const Page = ({ params }: { params: { id: string } }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [storyData, setStoryData] = useState<Story | null>(null);
   const [loading, setLoading] = useState(true);
-  const [updateLoading, setUpdateLoading] = useState(false);
+  const [changeLoading, setChangeLoading] = useState(false);
 
   // Form fields state
   const [updatedTitle, setUpdatedTitle] = useState("");
@@ -33,18 +35,46 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   const router = useRouter();
 
-  // Open modal and fetch story data
+  // Click handlers
   const handleEditClick = async () => {
-    setIsModalOpen(true);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDeleteClick = async () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false);
   };
 
   // Handle form submission
+  const handleConfirmDelete = async () => {
+    setChangeLoading(true);
+    const { id } = (await params);
+    try {
+      const result = await deleteStory(id);
+
+      // Simulate a 3-second delay
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      if (result.status == "SUCCESS") {
+        router.push(`/`);
+      }
+    } catch (error) {
+      console.error("Error deleting story:", error);
+    } finally {
+      setIsDeleteModalOpen(false);
+      setChangeLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { id } = (await params);
 
     try {
-      setUpdateLoading(true);
+      setChangeLoading(true);
 
       const result = await updateStory(id, updatedTitle, updatedCategory, updatedStory);
 
@@ -53,7 +83,6 @@ const Page = ({ params }: { params: { id: string } }) => {
 
       alert("Story updated successfully!");
       alert("[NEED YOU] I am sorry, the data will change in 60 seconds :)!");
-      setIsModalOpen(false);
 
       if (result.status == "SUCCESS") {
         router.push(`/story/${result._id}`);
@@ -62,7 +91,8 @@ const Page = ({ params }: { params: { id: string } }) => {
       console.error("Error updating story:", error);
       alert("Failed to update story.");
     } finally {
-      setUpdateLoading(false);
+      setChangeLoading(false);
+      setIsEditModalOpen(false);
     }
   };
 
@@ -164,25 +194,23 @@ const Page = ({ params }: { params: { id: string } }) => {
       </section>
 
       <section className="px-6 py-12 max-w-7xl mx-auto">
-        <div className="max-w-4xl mx-auto flex justify-end gap-4">
-          {/* <button
-            onClick={handleEditClick}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-            Edit
-          </button> */}
+        <div className="max-w-4xl mx-auto flex justify-end gap-4 border">
           <button
             onClick={handleEditClick}
             disabled={loading} // Disable the button while loading
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
           >
-            {updateLoading ? (
+            {changeLoading ? (
               <Spinner text="Loading..." />
             ) : (
-              "Edit" // Default text
+              "Edit"
             )}
           </button>
 
-          <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
+          <button
+            onClick={handleDeleteClick}
+            disabled={loading}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
             Delete
           </button>
         </div>
@@ -190,8 +218,8 @@ const Page = ({ params }: { params: { id: string } }) => {
 
       {/* Edit Modal */}
       <Dialog
-        open={isModalOpen}
-        onOpenChange={setIsModalOpen}>
+        open={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
@@ -235,7 +263,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
             <DialogFooter>
               <Button
-                type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
+                type="button" variant="outline" onClick={() => setIsEditModalOpen(false)}>
                 Cancel
               </Button>
 
@@ -246,6 +274,18 @@ const Page = ({ params }: { params: { id: string } }) => {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Confirmation Modal to confirm story deletion */}
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Delete Story"
+        description="Are you sure you want to delete this story? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        changeLoading={changeLoading}
+      />
     </>
   );
 }

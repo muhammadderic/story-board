@@ -102,3 +102,34 @@ export const updateStory = async (
     });
   }
 };
+
+export const deleteStory = async (id: string) => {
+  const session = await auth();
+
+  if (!session) {
+    return parseServerActionResponse({
+      error: "Not signed in",
+      status: "ERROR",
+    });
+  }
+
+  try {
+    // Delete the document by its ID
+    const result = await writeClient
+      .withConfig({ useCdn: false })
+      .delete(id) // Target the document by its ID
+
+    return parseServerActionResponse({
+      ...result,
+      error: "",
+      status: "SUCCESS",
+    });
+  } catch (error) {
+    console.error(error);
+
+    return parseServerActionResponse({
+      error: JSON.stringify(error),
+      status: "ERROR",
+    });
+  }
+};
