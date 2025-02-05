@@ -30,6 +30,7 @@
     "next-sanity": "^9.8.46",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0",
     "sanity": "^3.72.1",
     "sanity-plugin-markdown": "^5.0.0",
     "slugify": "^1.6.6",

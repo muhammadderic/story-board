@@ -130,7 +130,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <section className="w-full bg-black py-2 px-6">
+      <section className="w-full bg-gray-900 py-2 px-6">
         <div className="max-w-4xl flex justify-start gap-4">
           <button
             onClick={() => router.back()}
@@ -141,7 +141,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       </section>
 
       {/* Hero Section */}
-      <section className="w-full bg-black flex justify-center items-center flex-col py-20 px-6">
+      <section className="w-full bg-gray-900 flex justify-center items-center flex-col py-20 px-6">
         <p className="bg-gradient-to-r from-blue-600 to-purple-500 px-6 py-2 font-bold rounded-full uppercase text-white text-sm tracking-wide shadow-lg">
           {storyData && formatDate(storyData._createdAt)}
         </p>
@@ -197,7 +197,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       </section>
 
       <section className="px-6 py-12 max-w-7xl mx-auto">
-        <div className="max-w-4xl mx-auto flex justify-end gap-4 border">
+        <div className="max-w-4xl mx-auto flex justify-end gap-4">
           <button
             onClick={handleEditClick}
             disabled={loading} // Disable the button while loading
