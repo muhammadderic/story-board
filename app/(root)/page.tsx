@@ -18,8 +18,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
   }
 
   return (
-    <div className="py-10">
-      <section className="w-full bg-gray-900 min-h-[530px] flex justify-center items-center flex-col py-10 px-6">
+    <div className="pb-10 border">
+      <section className="w-full bg-gray-900 min-h-[530px] flex justify-center items-center flex-col pb-10 px-6">
         <Hero />
         <SearchForm query={query} />
       </section>

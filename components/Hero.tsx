@@ -1,6 +1,6 @@
 const Hero = () => {
   return (
-    <section className="relative flex flex-col items-center justify-center text-center min-h-[60vh] py-10 px-6 overflow-hidden">
+    <section className="relative flex flex-col items-center justify-center text-center min-h-[60vh] px-6 overflow-hidden">
       {/* Main Heading */}
       <h1 className="text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-500 font-bold mb-6 leading-tight animate-fade-in-up">
         Tell Your Story, <br />
