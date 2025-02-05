@@ -26,7 +26,8 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [storyData, setStoryData] = useState<Story | null>(null);
   const [loading, setLoading] = useState(true);
-  const [changeLoading, setChangeLoading] = useState(false);
+  const [editedLoading, setEditedLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Form fields state
   const [updatedTitle, setUpdatedTitle] = useState("");
@@ -50,7 +51,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   // Handle form submission
   const handleConfirmDelete = async () => {
-    setChangeLoading(true);
+    setDeleteLoading(true);
     const { id } = (await params);
     try {
       const result = await deleteStory(id);
@@ -65,7 +66,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       console.error("Error deleting story:", error);
     } finally {
       setIsDeleteModalOpen(false);
-      setChangeLoading(false);
+      setDeleteLoading(false);
     }
   };
 
@@ -74,7 +75,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     const { id } = (await params);
 
     try {
-      setChangeLoading(true);
+      setEditedLoading(true);
 
       const result = await updateStory(id, updatedTitle, updatedCategory, updatedStory);
 
@@ -91,7 +92,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       console.error("Error updating story:", error);
       alert("Failed to update story.");
     } finally {
-      setChangeLoading(false);
+      setEditedLoading(false);
       setIsEditModalOpen(false);
     }
   };
@@ -200,7 +201,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             disabled={loading} // Disable the button while loading
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
           >
-            {changeLoading ? (
+            {editedLoading ? (
               <Spinner text="Loading..." />
             ) : (
               "Edit"
@@ -284,7 +285,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         description="Are you sure you want to delete this story? This action cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
-        changeLoading={changeLoading}
+        changeLoading={deleteLoading}
       />
     </>
   );
