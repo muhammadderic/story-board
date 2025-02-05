@@ -102,7 +102,9 @@ const Page = ({ params }: { params: { id: string } }) => {
     const fetchStoryData = async () => {
       const { id } = (await params);
       try {
-        const data: Story | null = await client.fetch(STORY_BY_ID_QUERY, { id });
+        const data: Story | null = await client
+          .withConfig({ useCdn: false })
+          .fetch(STORY_BY_ID_QUERY, { id });
 
         if (data) {
           setStoryData(data);
